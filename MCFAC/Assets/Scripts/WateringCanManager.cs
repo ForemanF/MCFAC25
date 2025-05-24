@@ -8,6 +8,9 @@ public class WateringCanManager : MonoBehaviour
     ParticleSystem ps;
 
     [SerializeField]
+    Transform water_spawn_loc;
+
+    [SerializeField]
     float radius = 0.1f;
 
     [SerializeField]
@@ -30,9 +33,19 @@ public class WateringCanManager : MonoBehaviour
         IsWatering
     }
 
+    [SerializeField]
+    float water_speed = 2f;
+
+    [SerializeField]
+    float water_forward_spread = 0.3f;
+    
+    [SerializeField]
+    float water_side_spread = 0.2f;
+
+    [SerializeField]
     float water_fire_rate = 0.2f;
+    
     float time_elapsed = 0;
-    float water_speed = 1f;
 
     [SerializeField]
     GameObject water_droplet_prefab;
@@ -63,8 +76,9 @@ public class WateringCanManager : MonoBehaviour
 
     void HandleWaterState() { 
         if(current_state == WaterState.IsWatering) {
-            SpawnWaterDroplets();
-            ChangeWaterValue(-Time.deltaTime * water_per_second);
+            float spawned_droplets = SpawnWaterDroplets();
+            //ChangeWaterValue(-Time.deltaTime * water_per_second);
+            ChangeWaterValue(-spawned_droplets);
         }
     }
 
@@ -90,7 +104,7 @@ public class WateringCanManager : MonoBehaviour
     }
 
     void StartWatering() {
-        ps.Play();
+        //ps.Play();
         current_state = WaterState.IsWatering;
     }
 
@@ -98,10 +112,14 @@ public class WateringCanManager : MonoBehaviour
         time_elapsed += Time.deltaTime;
 
         if(time_elapsed > water_fire_rate) {
-            GameObject new_droplet = Instantiate(water_droplet_prefab, transform);
-            Vector3 initial_velocity = transform.right * water_speed;
+            GameObject new_droplet = Instantiate(water_droplet_prefab, water_spawn_loc.position, transform.rotation);
+            Vector3 initial_velocity = transform.right * (water_speed + Random.Range(-water_forward_spread, water_forward_spread));
+            Vector3 side_comp = transform.up * Random.Range(-water_side_spread, water_side_spread);
+            initial_velocity += side_comp;
+
             new_droplet.GetComponent<Rigidbody2D>().velocity = initial_velocity;
             time_elapsed = 0;
+            return 1;
         }
 
         return 0;

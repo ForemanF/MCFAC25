@@ -12,3 +12,11 @@ public class WaterAmountEvent {
         max_water = _max_water;
     }
 }
+
+public class ParticleExplosionEvent {
+    public Vector3 position;
+
+    public ParticleExplosionEvent(Vector3 _position) {
+        position = _position;
+    }
+}

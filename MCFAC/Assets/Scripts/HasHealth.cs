@@ -19,4 +19,18 @@ public class HasHealth : MonoBehaviour
     {
         
     }
+
+    public void TakeDamage(float amount) {
+        health -= amount;
+
+        if(health <= 0) {
+            StartCoroutine(StartDeathSequence());
+        }
+    }
+
+    IEnumerator StartDeathSequence() {
+        EventBus.Publish(new ParticleExplosionEvent(transform.position));
+        yield return null;
+        Destroy(gameObject);
+    }
 }

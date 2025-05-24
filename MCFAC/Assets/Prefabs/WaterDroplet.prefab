@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 1770292628493648619}
   - component: {fileID: 795794607197160519}
   - component: {fileID: 1050974176353327186}
+  - component: {fileID: 6726975207875784801}
+  - component: {fileID: 2763046019241278795}
   m_Layer: 0
   m_Name: WaterDroplet
   m_TagString: WaterParticle
@@ -99,7 +101,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 10
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}
@@ -158,3 +160,29 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &6726975207875784801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3308709745971265884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a2c30796b9e4710bd13051db807e19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  life: 5
+--- !u!114 &2763046019241278795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3308709745971265884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0318f393593234d3289852c404d34198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  kb_strength: 0.5
