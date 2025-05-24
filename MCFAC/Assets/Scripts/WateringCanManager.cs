@@ -30,6 +30,13 @@ public class WateringCanManager : MonoBehaviour
         IsWatering
     }
 
+    float water_fire_rate = 0.2f;
+    float time_elapsed = 0;
+    float water_speed = 1f;
+
+    [SerializeField]
+    GameObject water_droplet_prefab;
+
     WaterState current_state;
 
     // Start is called before the first frame update
@@ -56,6 +63,7 @@ public class WateringCanManager : MonoBehaviour
 
     void HandleWaterState() { 
         if(current_state == WaterState.IsWatering) {
+            SpawnWaterDroplets();
             ChangeWaterValue(-Time.deltaTime * water_per_second);
         }
     }
@@ -84,6 +92,19 @@ public class WateringCanManager : MonoBehaviour
     void StartWatering() {
         ps.Play();
         current_state = WaterState.IsWatering;
+    }
+
+    int SpawnWaterDroplets() {
+        time_elapsed += Time.deltaTime;
+
+        if(time_elapsed > water_fire_rate) {
+            GameObject new_droplet = Instantiate(water_droplet_prefab, transform);
+            Vector3 initial_velocity = transform.right * water_speed;
+            new_droplet.GetComponent<Rigidbody2D>().velocity = initial_velocity;
+            time_elapsed = 0;
+        }
+
+        return 0;
     }
 
     void UpdateWateringCanPos() {
