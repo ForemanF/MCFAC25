@@ -8,6 +8,9 @@ public class HasHealth : MonoBehaviour
     float health = 3.0f;
 
     [SerializeField]
+    float max_health = 3.0f;
+
+    [SerializeField]
     ExplosivePs damage_effect = ExplosivePs.Blood;
 
     [SerializeField]
@@ -17,19 +20,15 @@ public class HasHealth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void TakeDamage(float amount) {
         health -= amount;
 
         EventBus.Publish(new ParticleExplosionEvent(transform.position, damage_effect, 5 * (int)amount));
+
+        EventBus.Publish(new HealthEvent(gameObject, health, max_health));
 
         if(health <= 0) {
             StartCoroutine(StartDeathSequence());

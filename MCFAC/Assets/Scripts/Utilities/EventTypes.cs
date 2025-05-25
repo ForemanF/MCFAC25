@@ -30,3 +30,15 @@ public class ParticleExplosionEvent {
         num_particles = _num_particles;
     }
 }
+
+public class HealthEvent {
+    public GameObject obj;
+    public float health;
+    public float max_health;
+
+    public HealthEvent(GameObject _obj, float _health, float _max_health) {
+        obj = _obj;
+        health = _health;
+        max_health = _max_health;
+    }
+}
