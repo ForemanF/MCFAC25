@@ -15,8 +15,18 @@ public class WaterAmountEvent {
 
 public class ParticleExplosionEvent {
     public Vector3 position;
+    public ExplosivePs explosive_ps;
+    public int num_particles;
 
-    public ParticleExplosionEvent(Vector3 _position) {
+    public ParticleExplosionEvent(Vector3 _position, ExplosivePs _explosive_ps) {
         position = _position;
+        explosive_ps = _explosive_ps;
+        num_particles = 100;
+    }
+
+    public ParticleExplosionEvent(Vector3 _position, ExplosivePs _explosive_ps, int _num_particles) {
+        position = _position;
+        explosive_ps = _explosive_ps;
+        num_particles = _num_particles;
     }
 }

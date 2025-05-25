@@ -17,11 +17,27 @@ public class Enemy : MonoBehaviour
 
     HasHealth has_health;
 
+    [SerializeField]
+    float contact_damage = 1f;
+
+    [SerializeField]
+    float own_kb_amt = 1f;
+
+    [SerializeField]
+    float time_between_retarget = 0.5f;
+
+    float time_retarget_elapsed = 0;
+
+    List<string> target_tags;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        target_tags = new List<string>();
+        //target_tags.Add("Player");
+        target_tags.Add("Plant");
+
         rb2d = GetComponent<Rigidbody2D>();
         has_health = GetComponent<HasHealth>();
     }
@@ -29,6 +45,12 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        time_retarget_elapsed += Time.deltaTime;
+        if(time_retarget_elapsed > time_between_retarget) {
+            time_retarget_elapsed = 0;
+            target = FindNearestTarget(target_tags, transform);
+        }
+
         if(target == null) {
             return;
         }
@@ -50,7 +72,53 @@ public class Enemy : MonoBehaviour
 
         if(damage > 0) {
             has_health.TakeDamage(damage);
-        
         }
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Collider2D collider = collision.collider;
+        DamageLogic(collider);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        DamageLogic(collision);
+    }
+
+    void DamageLogic(Collider2D collider) { 
+        if(collider.CompareTag("Player") || collider.CompareTag("Plant")) {
+            HasHealth hit_health = collider.gameObject.GetComponent<HasHealth>();
+            if(hit_health != null) {
+                hit_health.TakeDamage(contact_damage);
+            }
+
+            // knockback this unit after it hits something
+            Vector3 direction = transform.position - collider.gameObject.transform.position;
+            direction = direction.normalized;
+            Knockback(direction * own_kb_amt, 0);
+        }
+    }
+
+    Transform FindNearestTarget(List<string> tags, Transform tf) {
+
+        float distance = Mathf.Infinity;
+        Transform closest_tf = null;
+
+        foreach(string tag in tags) {
+            GameObject[] objects = GameObject.FindGameObjectsWithTag(tag);
+
+            foreach(GameObject obj in objects) {
+                float cur_dist = (obj.transform.position - tf.position).magnitude;
+
+                if(cur_dist < distance) {
+                    closest_tf = obj.transform;
+                    distance = cur_dist;
+                }
+            }
+        }
+
+        return closest_tf;
+    }
+
 }

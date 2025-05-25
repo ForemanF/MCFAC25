@@ -11,6 +11,14 @@ public class Plant : MonoBehaviour
     [SerializeField]
     SpriteRenderer sr;
 
+    [SerializeField]
+    GameObject green_patch_pf;
+
+    GameObject green_patch;
+
+    [SerializeField]
+    float patch_growth_rate = 0.04f;
+
     int current_stage = 0;
     float amt_to_next_stage = 0;
 
@@ -18,7 +26,7 @@ public class Plant : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        green_patch = Instantiate(green_patch_pf, transform.position, transform.rotation);
     }
 
     // Update is called once per frame
@@ -35,13 +43,12 @@ public class Plant : MonoBehaviour
             return;
         }
 
-        // Todo: add some visual when the plant gains water w/o upgrading
+        green_patch.transform.localScale += Vector3.one * patch_growth_rate;
 
         if(amt_to_next_stage >= stages[current_stage].amount_to_upgrade) {
-            // todo: add some explosion type effect when the upgrade happens to hide the 
-            // sprite replacement
             current_stage += 1;
             sr.sprite = stages[current_stage].sprite;
+            EventBus.Publish(new ParticleExplosionEvent(transform.position, ExplosivePs.PlantGrowth));
             amt_to_next_stage = 0;
         }
     }
