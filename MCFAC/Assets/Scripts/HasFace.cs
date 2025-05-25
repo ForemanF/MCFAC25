@@ -33,4 +33,8 @@ public class HasFace : MonoBehaviour
     public GameObject GetFace() {
         return current_face;
     }
+
+    public Transform GetFaceLocation() {
+        return face_location;
+    }
 }

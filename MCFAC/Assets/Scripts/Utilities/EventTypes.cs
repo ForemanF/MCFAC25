@@ -35,10 +35,27 @@ public class HealthEvent {
     public GameObject obj;
     public float health;
     public float max_health;
+    public bool force_face;
 
     public HealthEvent(GameObject _obj, float _health, float _max_health) {
         obj = _obj;
         health = _health;
         max_health = _max_health;
+        force_face = false;
     }
+
+    public HealthEvent(GameObject _obj, float _health, float _max_health, bool _force_face) {
+        obj = _obj;
+        health = _health;
+        max_health = _max_health;
+        force_face = _force_face;
+    }
+}
+
+public class AquireSeedEvent {
+    public PlantType plant_type;
+    
+    public AquireSeedEvent(PlantType _plant_type) {
+        plant_type = _plant_type;
+    }   
 }

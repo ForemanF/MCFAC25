@@ -17,15 +17,15 @@ public class FaceManager : MonoBehaviour
     }
 
     void _OnHealthEvent(HealthEvent e) {
-
-        // determine which face to use
-
-        HasFace has_face = e.obj.GetComponent<HasFace>();
-        if(has_face == null) {
+        if(!e.obj.TryGetComponent<HasFace>(out var has_face)) {
             return;
         }
 
         GameObject current_face = has_face.GetFace();
+
+        if(e.force_face == false && current_face == null) {
+            return;
+        }
 
         float health_percent = e.health / e.max_health;
         foreach(FaceData face_data in faces) { 

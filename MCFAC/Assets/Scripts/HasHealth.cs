@@ -35,6 +35,14 @@ public class HasHealth : MonoBehaviour
         }
     }
 
+    public float GetHealth() {
+        return health;
+    }
+
+    public float GetMaxHealth() {
+        return max_health;
+    }
+
     IEnumerator StartDeathSequence() {
         EventBus.Publish(new ParticleExplosionEvent(transform.position, death_effect));
         yield return null;

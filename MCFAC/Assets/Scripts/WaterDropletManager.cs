@@ -13,6 +13,9 @@ public class WaterDropletManager : MonoBehaviour
     Rigidbody2D rb2d;
     BoxCollider2D bc2d;
 
+    [SerializeField]
+    bool grows_plants = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +39,7 @@ public class WaterDropletManager : MonoBehaviour
             bc2d.enabled = false;
         }
 
-        else if(collision.CompareTag("Plant")) {
+        else if(grows_plants && collision.CompareTag("Plant")) {
             collision.gameObject.GetComponent<Plant>().WaterPlant(1); 
             EventBus.Publish(new ParticleExplosionEvent(transform.position, ExplosivePs.IndividualGrowth, 5));
         }
