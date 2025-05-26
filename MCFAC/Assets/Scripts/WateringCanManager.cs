@@ -5,9 +5,6 @@ using UnityEngine;
 public class WateringCanManager : MonoBehaviour
 {
     [SerializeField]
-    ParticleSystem ps;
-
-    [SerializeField]
     Transform water_spawn_loc;
 
     [SerializeField]
@@ -21,9 +18,6 @@ public class WateringCanManager : MonoBehaviour
 
     [SerializeField]
     float max_water = 10;
-
-    [SerializeField]
-    float water_per_second = 1f;
 
     [SerializeField]
     float water_refill_speed = 2f;
@@ -50,12 +44,16 @@ public class WateringCanManager : MonoBehaviour
     [SerializeField]
     GameObject water_droplet_prefab;
 
+    [SerializeField]
+    float autorefill = 0;
+
     WaterState current_state;
 
     // Start is called before the first frame update
     void Start()
     {
         StopWatering();
+        EventBus.Publish(new WaterAmountEvent(current_water, max_water));
     }
 
     // Update is called once per frame
@@ -69,6 +67,10 @@ public class WateringCanManager : MonoBehaviour
             StopWatering();
         }
 
+        if(autorefill != 0) { 
+            ChangeWaterValue(Time.deltaTime * autorefill);
+        }
+
         HandleWaterState();
 
         UpdateWateringCanPos();
@@ -77,7 +79,6 @@ public class WateringCanManager : MonoBehaviour
     void HandleWaterState() { 
         if(current_state == WaterState.IsWatering) {
             float spawned_droplets = SpawnWaterDroplets();
-            //ChangeWaterValue(-Time.deltaTime * water_per_second);
             ChangeWaterValue(-spawned_droplets);
         }
     }
@@ -99,12 +100,10 @@ public class WateringCanManager : MonoBehaviour
     }
 
     void StopWatering() {
-        ps.Stop();
         current_state = WaterState.NotWatering;
     }
 
     void StartWatering() {
-        //ps.Play();
         current_state = WaterState.IsWatering;
     }
 
@@ -140,5 +139,61 @@ public class WateringCanManager : MonoBehaviour
             rot *= Quaternion.Euler(180.0f, 0, 0);
         }
         transform.rotation = rot;
+    }
+
+    public void UpgradeCapacity(NumberUpgradeType num_upgrade_type, float val) { 
+        if(num_upgrade_type == NumberUpgradeType.Multiply) {
+            current_water += (max_water * val - max_water);
+            max_water *= val;
+        }
+        else {
+            current_water += val;
+            max_water += val;
+        }
+    }
+
+    public void UpgradeFireRate(NumberUpgradeType num_upgrade_type, float val) { 
+        if(num_upgrade_type == NumberUpgradeType.Multiply) {
+            water_fire_rate *= val;
+        }
+        else { 
+            water_fire_rate += val;
+        }
+    }
+
+    public void UpgradeSideSpread(NumberUpgradeType num_upgrade_type, float val) { 
+        if(num_upgrade_type == NumberUpgradeType.Multiply) {
+            water_side_spread *= val;
+        }
+        else {
+            water_side_spread += val;
+        }
+    }
+
+    public void UpgradeRange(NumberUpgradeType num_upgrade_type, float val) { 
+        if(num_upgrade_type == NumberUpgradeType.Multiply) {
+            water_speed *= val;
+        }
+        else {
+            water_speed += val;
+        }
+    }
+
+    public void UpgradeRefillRate(NumberUpgradeType num_upgrade_type, float val) { 
+        if(num_upgrade_type == NumberUpgradeType.Multiply) {
+            water_refill_speed *= val;
+        }
+        else {
+            water_refill_speed += val;
+        }
+    }
+
+    public void UpgradeAutoRefill(NumberUpgradeType num_upgrade_type, float val) { 
+        if(num_upgrade_type == NumberUpgradeType.Multiply) {
+            autorefill *= val;
+        }
+        else {
+            autorefill += val;
+        }
     }
 }

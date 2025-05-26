@@ -35,7 +35,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         target_tags = new List<string>();
-        //target_tags.Add("Player");
+        target_tags.Add("Player");
         target_tags.Add("Plant");
 
         rb2d = GetComponent<Rigidbody2D>();
@@ -93,10 +93,19 @@ public class Enemy : MonoBehaviour
                 hit_health.TakeDamage(contact_damage);
             }
 
+            float additional_kb = 0;
+            if(collider.TryGetComponent<Plant>(out Plant plant)) { 
+                if(plant.GetPlantType() == PlantType.GreenCactus) {
+                    has_health.TakeDamage(plant.GetSpecialValue());
+                    additional_kb = 1;
+                }
+            }
+
             // knockback this unit after it hits something
             Vector3 direction = transform.position - collider.gameObject.transform.position;
             direction = direction.normalized;
-            Knockback(direction * own_kb_amt, 0);
+            Knockback(direction * (own_kb_amt + additional_kb), 0);
+
         }
     }
 

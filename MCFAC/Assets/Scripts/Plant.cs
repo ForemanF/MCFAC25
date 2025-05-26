@@ -61,11 +61,17 @@ public class Plant : MonoBehaviour
     [SerializeField]
     float fire_speed = 1f;
 
+    [SerializeField]
+    float special_val = 1f;
+
     float fire_time_elapsed = 0;
 
     Transform current_target = null;
 
     HasFace has_face;
+
+    [SerializeField]
+    float health_increase_on_stage_up = 2;
 
 
     // Start is called before the first frame update
@@ -89,7 +95,11 @@ public class Plant : MonoBehaviour
             if(current_target == null) {
                 return;
             }
-            FireAtTarget();
+
+            if(proj_pf != null) { 
+                FireAtTarget();
+            }
+
         }
     }
 
@@ -118,6 +128,7 @@ public class Plant : MonoBehaviour
     }
 
     public void WaterPlant(float amount) {
+        has_health.Heal(amount);
 
         if(current_stage + 1 >= stages.Count) {
             amt_to_seed += amount;
@@ -142,11 +153,25 @@ public class Plant : MonoBehaviour
             EventBus.Publish(new ParticleExplosionEvent(transform.position, ExplosivePs.PlantGrowth));
             amt_to_next_stage = 0;
 
+            has_health.IncreaseMaxHealth(health_increase_on_stage_up);
 
             // this is a work around to get the face to show up
             if(current_stage == face_stage) {
                 EventBus.Publish(new HealthEvent(gameObject, has_health.GetHealth(), has_health.GetMaxHealth(), true));
             }
         }
+    }
+
+    public PlantType GetPlantType() {
+        return plant_type;
+    }
+
+    public float GetSpecialValue() {
+        return special_val;
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(green_patch);
     }
 }

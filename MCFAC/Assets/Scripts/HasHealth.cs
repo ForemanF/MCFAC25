@@ -35,6 +35,16 @@ public class HasHealth : MonoBehaviour
         }
     }
 
+    public void Heal(float amount) {
+        if(health == max_health) {
+            return;
+        }
+
+        health = Mathf.Min(max_health, health + amount);
+        EventBus.Publish(new HealthEvent(gameObject, health, max_health));
+
+    }
+
     public float GetHealth() {
         return health;
     }
@@ -45,7 +55,18 @@ public class HasHealth : MonoBehaviour
 
     IEnumerator StartDeathSequence() {
         EventBus.Publish(new ParticleExplosionEvent(transform.position, death_effect));
+
+        if(gameObject.tag == "Player") {
+            EventBus.Publish(new GameOverEvent(false));
+        }
+
         yield return null;
         Destroy(gameObject);
+    }
+
+    public void IncreaseMaxHealth(float amount) {
+        health += amount;
+        max_health += amount;
+        EventBus.Publish(new HealthEvent(gameObject, health, max_health));
     }
 }

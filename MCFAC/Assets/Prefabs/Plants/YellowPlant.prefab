@@ -145,7 +145,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2548304473035854697}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.70703787, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -238,8 +238,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bd0ac40edc2f4a5e920a70760d87043, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 10
-  max_health: 10
+  health: 2
+  max_health: 2
   damage_effect: 2
   death_effect: 0
 --- !u!114 &1054753978750763191
@@ -255,13 +255,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stages:
+  - sprite: {fileID: 237390904, guid: 4bcba566401ae436a89cde474bb644bd, type: 3}
+    amount_to_upgrade: 5
   - sprite: {fileID: 364091983, guid: 4bcba566401ae436a89cde474bb644bd, type: 3}
     amount_to_upgrade: 5
   - sprite: {fileID: 1620988473, guid: 4bcba566401ae436a89cde474bb644bd, type: 3}
     amount_to_upgrade: 5
   - sprite: {fileID: -179438660, guid: 18bd5929ee4cc4471aef603e0978c8e3, type: 3}
     amount_to_upgrade: 5
-  face_stage: 2
+  face_stage: 3
   sr: {fileID: 7231543748103165814}
   green_patch_pf: {fileID: 7164747794332196978, guid: dd05d81c686cf4589bf4a516b6b1fbda, type: 3}
   patch_growth_rate: 0.04
@@ -271,6 +273,8 @@ MonoBehaviour:
   shoot_range: 4
   fire_rate_s: 3
   fire_speed: 10
+  special_val: 1
+  health_increase_on_stage_up: 2
 --- !u!114 &8655389290775805060
 MonoBehaviour:
   m_ObjectHideFlags: 0

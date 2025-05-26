@@ -16,11 +16,45 @@ public class PlayerController : MonoBehaviour
     Subscription<AquireSeedEvent> seed_sub;
 
 
+    [SerializeField]
+    BoxCollider2D bounds; // Assign the boundary area in Inspector
 
-    // Start is called before the first frame update
+    private Vector2 minBounds;
+    private Vector2 maxBounds;
+    private float halfWidth;
+    private float halfHeight;
+
     void Start()
     {
+        // Get world bounds of the BoxCollider2D
+        Bounds boxBounds = bounds.bounds;
+        minBounds = boxBounds.min;
+        maxBounds = boxBounds.max;
+
+        // Get size of the player to avoid clipping
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            Vector2 size = sr.bounds.extents;
+            halfWidth = size.x;
+            halfHeight = size.y;
+        }
+        else
+        {
+            halfWidth = 0.5f;
+            halfHeight = 0.5f;
+        }
+
         seed_sub = EventBus.Subscribe<AquireSeedEvent>(_OnAquireSeedEvent);
+    }
+
+    public void UpgradeWalkingSpeed(NumberUpgradeType num_upgrade_type, float val) { 
+        if(num_upgrade_type == NumberUpgradeType.Multiply) {
+            speed *= val;
+        }
+        else {
+            speed += val;
+        }
     }
 
     void _OnAquireSeedEvent(AquireSeedEvent e) {
@@ -37,13 +71,21 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horiz = Input.GetAxis("Horizontal");
-        float vert = Input.GetAxis("Vertical");
+        // Basic movement
+        float moveX = Input.GetAxis("Horizontal");
+        float moveY = Input.GetAxis("Vertical");
+        Vector3 move = new Vector3(moveX, moveY, 0f) * speed * Time.deltaTime;
 
-        Vector3 translation = new Vector3(horiz, vert) * Time.deltaTime * speed;
-        transform.position += translation;
+        // Apply movement
+        transform.position += move;
 
-        if(Input.GetKeyDown(KeyCode.Space)) { 
+        // Clamp position within bounds (considering player's size)
+        float clampedX = Mathf.Clamp(transform.position.x, minBounds.x + halfWidth, maxBounds.x - halfWidth);
+        float clampedY = Mathf.Clamp(transform.position.y, minBounds.y + halfHeight, maxBounds.y - halfHeight);
+
+        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+
+        if (Input.GetKeyDown(KeyCode.Space)) { 
             if(current_active_seed == null) {
                 return;
             }

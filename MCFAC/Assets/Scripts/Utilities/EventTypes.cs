@@ -59,3 +59,23 @@ public class AquireSeedEvent {
         plant_type = _plant_type;
     }   
 }
+
+public class ShowUpgradesEvent {
+    
+    public ShowUpgradesEvent() {
+    }   
+}
+
+public class DoneUpgradesEvent {
+    
+    public DoneUpgradesEvent() {
+    }   
+}
+
+public class GameOverEvent {
+    public bool did_win = false;
+    
+    public GameOverEvent(bool _did_win) {
+        did_win = _did_win;
+    }   
+}
